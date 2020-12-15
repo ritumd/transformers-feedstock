@@ -2,13 +2,13 @@ tests:
   - name: Setup Transformers Tests
     command: |
         git clone --recursive -b v$(python -c "import transformers; print(transformers.__version__)") https://github.com/huggingface/transformers.git
-        conda install -y pytest mock scikit-learn
+        conda install -y pytest mock scikit-learn parameterized
         pip install timeout_decorator
   - name: Run Transformers tests
     command: |
         cd transformers
         mkdir .cache
         export TRANSFORMERS_CACHE=$(pwd)/.cache
-        pytest -k "not test_modeling_tf_ctrl and not test_hf_api" -v ./tests/
+        pytest --ignore='tests/test_retrieval_rag.py' -k "not test_tokenization" -v ./tests/
   - name: Clean tests
     command: rm -rf transformers
