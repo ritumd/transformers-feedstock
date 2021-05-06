@@ -11,8 +11,8 @@ source:
 
 build:
   noarch: python
-  number: 3
-  string: py_{{ PKG_BUILDNUM }}
+  number: 4
+  string: py_pb{{ protobuf | replace(".*", "")}}_{{ PKG_BUILDNUM }}
   script: '{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv '
 
 requirements:
