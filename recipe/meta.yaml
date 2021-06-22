@@ -1,5 +1,5 @@
 {% set name = "transformers" %} 
-{% set version = "3.5.1" %}
+{% set version = "4.4.2" %}
 
 package:
   name: {{ name|lower }}
@@ -11,7 +11,7 @@ source:
 
 build:
   noarch: python
-  number: 4
+  number: 1
   string: py_pb{{ protobuf | replace(".*", "")}}_{{ PKG_BUILDNUM }}
   script: '{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv '
 
@@ -28,12 +28,11 @@ requirements:
     - regex {{ regex }}
     - requests {{ requests }}
     - sacremoses
-    - sentencepiece {{ sentencepiece }}
-    - protobuf {{ protobuf }}
     - tokenizers {{ tokenizers }}
     - tqdm {{ tqdm }}
-    - dataclasses                         #[py36]
+    - dataclasses
     - packaging
+    - importlib_metadata
 
 test:
   imports:

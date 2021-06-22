@@ -3,13 +3,13 @@ tests:
     command: |
         conda install -y git
         git clone --recursive -b v$(python -c "import transformers; print(transformers.__version__)") https://github.com/huggingface/transformers.git
-        conda install -y pytest mock scikit-learn parameterized
+        conda install -y pytest mock scikit-learn parameterized pandas
         pip install timeout_decorator
   - name: Run Transformers tests
     command: |
         cd transformers
         mkdir .cache
         export TRANSFORMERS_CACHE=$(pwd)/.cache
-        pytest --ignore='tests/test_retrieval_rag.py' --ignore='tests/test_benchmark.py' --ignore='tests/test_benchmark_tf.py' -k "not test_tokenization and not test_train_pipeline_custom_model and not testGradientAccumulatorDistributionStrategy" -v ./tests/
+        pytest --ignore='tests/test_retrieval_rag.py' --ignore='tests/test_benchmark.py' --ignore='tests/test_benchmark_tf.py' --ignore='tests/test_processor_speech_to_text.py' --ignore 'tests/test_tokenization_speech_to_text.py' -k "not test_tokenization and not test_train_pipeline_custom_model and not testGradientAccumulatorDistributionStrategy" -v ./tests/
   - name: Clean tests
     command: rm -rf transformers
