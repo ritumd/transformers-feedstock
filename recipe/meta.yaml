@@ -1,5 +1,5 @@
 {% set name = "transformers" %} 
-{% set version = "4.4.2" %}
+{% set version = "4.9.2" %}
 
 package:
   name: {{ name|lower }}
@@ -27,21 +27,30 @@ requirements:
     - python 
     - regex {{ regex }}
     - requests {{ requests }}
+    - pyyaml {{ pyyaml }}
     - sacremoses
     - tokenizers {{ tokenizers }}
     - tqdm {{ tqdm }}
     - dataclasses
     - packaging
+    - huggingface_hub
     - importlib_metadata
 
 test:
   imports:
     - transformers
+    - transformers.benchmark
     - transformers.commands
     - transformers.data
     # - transformers.data.datasets  # skip; would require PyTorch as install pre-req
     - transformers.data.metrics
     - transformers.data.processors
+    - transformers.data.metrics
+    - transformers.data.processors
+    - transformers.models
+    - transformers.pipelines
+    #- transformers.sagemaker       # skip; would require PyTorch as install pre-req
+    - transformers.utils
   commands:
     - python $CONDA_PREFIX/bin/transformers-cli --help
   requires:
