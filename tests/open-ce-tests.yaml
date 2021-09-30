@@ -3,19 +3,42 @@ tests:
     command: |
         conda install -y git
         git clone --recursive -b v$(python -c "import transformers; print(transformers.__version__)") https://github.com/huggingface/transformers.git
-        conda install -y pytest mock scikit-learn parameterized pandas pyarrow=3.0.0 sentencepiece black
-        ARCH=$(arch)
-        if test "${ARCH}" == "x86_64"
-        then
-            ARCH="64"
-        fi
-        conda install gxx_linux-${ARCH}
-        pip install timeout_decorator datasets
+        conda install -y pytest black sentencepiece
   - name: Run Transformers tests
     command: |
         cd transformers
-        mkdir .cache
-        export TRANSFORMERS_CACHE=$(pwd)/.cache
-        pytest --ignore='tests/test_processor_speech_to_text.py' --ignore='tests/test_tokenization_speech_to_text.py' --ignore='tests/test_feature_extraction_speech_to_text.py' -k "not test_batch_encode_dynamic_overflowing and not test_multi_gpu_data_parallel_forward and not test_empty_target_text and not test_max_length_integration and not test_prepare_batch_integration and not test_outputs_can_be_shorter and not test_outputs_not_longer_than_maxlen and not test_max_length and not test_prepare_batch and not test_save_pretrained" -v ./tests/
+        SKIPPED_TESTS=(
+                     "not test_batch_encode_dynamic_overflowing and"
+                     "not test_np_encode_plus_sent_to_model and"
+                     "not test_prepare_seq2seq_batch and"
+                     "not test_tf_encode_plus_sent_to_model and"
+                     "not test_torch_encode_plus_sent_to_model"
+        )
+        TESTS_TO_RUN="tests/test_cli.py
+                      tests/test_configuration_auto.py
+                      tests/test_feature_extraction_auto.py
+                      tests/test_file_utils.py
+                      tests/test_hf_api.py
+                      tests/test_hf_argparser.py
+                      tests/test_logging.py
+                      tests/test_model_card.py
+                      tests/test_model_output.py
+                      tests/test_onnx.py
+                      tests/test_onnx_v2.py
+                      tests/test_processor_wav2vec2.py
+                      tests/test_tokenization_albert.py
+                      tests/test_tokenization_auto.py
+                      tests/test_tokenization_bert.py
+                      tests/test_tokenization_bert_generation.py
+                      tests/test_tokenization_bertweet.py
+                      tests/test_tokenization_blenderbot.py
+                      tests/test_tokenization_ctrl.py
+                      tests/test_tokenization_deberta.py
+                      tests/test_tokenization_distilbert.py
+                      tests/test_tokenization_dpr.py
+                      tests/test_tokenization_wav2vec2.py
+                      tests/test_utils_check_copies.py
+                      tests/test_versions_utils.py"
+        pytest -k "${SKIPPED_TESTS[*]}" -v ${TESTS_TO_RUN}
   - name: Clean tests
     command: rm -rf transformers
