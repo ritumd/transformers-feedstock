@@ -18,7 +18,6 @@ tests:
                       tests/test_configuration_auto.py
                       tests/test_feature_extraction_auto.py
                       tests/test_file_utils.py
-                      tests/test_hf_api.py
                       tests/test_hf_argparser.py
                       tests/test_logging.py
                       tests/test_model_card.py
