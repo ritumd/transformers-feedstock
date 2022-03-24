@@ -1,5 +1,5 @@
 {% set name = "transformers" %} 
-{% set version = "4.11.3" %}
+{% set version = "4.17.0" %}
 
 package:
   name: {{ name|lower }}
@@ -11,7 +11,7 @@ source:
 
 build:
   noarch: python
-  number: 2
+  number: 1
   string: pyh{{ PKG_HASH }}_pb{{ protobuf | replace(".*", "")}}_{{ PKG_BUILDNUM }}
   script: '{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv '
 
