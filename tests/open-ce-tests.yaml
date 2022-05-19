@@ -4,6 +4,7 @@ tests:
         conda install -y git
         git clone --recursive -b v$(python -c "import transformers; print(transformers.__version__)") https://github.com/huggingface/transformers.git
         conda install -y pytest black sentencepiece
+        pip install timeout-decorator parameterized black
   - name: Run Transformers tests
     command: |
         cd transformers
@@ -12,32 +13,39 @@ tests:
                      "not test_np_encode_plus_sent_to_model and"
                      "not test_prepare_seq2seq_batch and"
                      "not test_tf_encode_plus_sent_to_model and"
-                     "not test_torch_encode_plus_sent_to_model"
+                     "not test_torch_encode_plus_sent_to_model and "
+                     "not test_is_copy_consistent "
         )
-        TESTS_TO_RUN="tests/test_cli.py
-                      tests/test_configuration_auto.py
-                      tests/test_feature_extraction_auto.py
-                      tests/test_file_utils.py
-                      tests/test_hf_argparser.py
-                      tests/test_logging.py
-                      tests/test_model_card.py
-                      tests/test_model_output.py
-                      tests/test_onnx.py
-                      tests/test_onnx_v2.py
-                      tests/test_processor_wav2vec2.py
-                      tests/test_tokenization_albert.py
-                      tests/test_tokenization_auto.py
-                      tests/test_tokenization_bert.py
-                      tests/test_tokenization_bert_generation.py
-                      tests/test_tokenization_bertweet.py
-                      tests/test_tokenization_blenderbot.py
-                      tests/test_tokenization_ctrl.py
-                      tests/test_tokenization_deberta.py
-                      tests/test_tokenization_distilbert.py
-                      tests/test_tokenization_dpr.py
-                      tests/test_tokenization_wav2vec2.py
-                      tests/test_utils_check_copies.py
-                      tests/test_versions_utils.py"
+        TESTS_TO_RUN="tests/utils/test_cli.py
+                      tests/models/auto/test_configuration_auto.py
+                      tests/models/auto/test_feature_extraction_auto.py
+                      tests/utils/test_file_utils.py
+                      tests/utils/test_hf_argparser.py
+                      tests/utils/test_logging.py
+                      tests/utils/test_model_card.py
+                      tests/utils/test_model_output.py
+                      tests/onnx/test_onnx.py
+                      tests/onnx/test_onnx_v2.py
+                      tests/models/wav2vec2/test_processor_wav2vec2.py
+                      tests/models/albert/test_tokenization_albert.py
+                      tests/models/auto/test_tokenization_auto.py
+                      tests/models/bert/test_tokenization_bert.py
+                      tests/models/bert_generation/test_tokenization_bert_generation.py
+                      tests/models/bertweet/test_tokenization_bertweet.py
+                      tests/models/blenderbot/test_tokenization_blenderbot.py
+                      tests/models/ctrl/test_tokenization_ctrl.py
+                      tests/models/deberta/test_tokenization_deberta.py
+                      tests/models/distilbert/test_tokenization_distilbert.py
+                      tests/models/dpr/test_tokenization_dpr.py
+                      tests/models/wav2vec2/test_tokenization_wav2vec2.py
+                      tests/utils/test_versions_utils.py"
+        
+        #for skipped_test in "${TESTSUITES_TO_SKIP[@]}"
+        #do
+        #   SKIPPED_TEST_SUITES+="--ignore $skipped_test "
+        #done
         pytest -k "${SKIPPED_TESTS[*]}" -v ${TESTS_TO_RUN}
+        #pytest -k "${SKIPPED_TESTS[*]}" ${SKIPPED_TEST_SUITES} -v tests/
+
   - name: Clean tests
     command: rm -rf transformers
