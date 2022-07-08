@@ -1,5 +1,5 @@
 {% set name = "transformers" %} 
-{% set version = "4.17.0" %}
+{% set version = "4.19.2" %}
 
 package:
   name: {{ name|lower }}
