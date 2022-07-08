@@ -40,12 +40,7 @@ tests:
                       tests/models/wav2vec2/test_tokenization_wav2vec2.py
                       tests/utils/test_versions_utils.py"
         
-        #for skipped_test in "${TESTSUITES_TO_SKIP[@]}"
-        #do
-        #   SKIPPED_TEST_SUITES+="--ignore $skipped_test "
-        #done
         pytest -k "${SKIPPED_TESTS[*]}" -v ${TESTS_TO_RUN}
-        #pytest -k "${SKIPPED_TESTS[*]}" ${SKIPPED_TEST_SUITES} -v tests/
-
+        
   - name: Clean tests
     command: rm -rf transformers
